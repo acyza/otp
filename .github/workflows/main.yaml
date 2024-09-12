@@ -270,12 +270,25 @@ jobs:
           ./otp_build release -a
           cp /mnt/c/opt/local64/pgm/wxWidgets-${{ env.WXWIDGETS_VERSION }}/3rdparty/webview2/runtimes/win-x64/native/WebView2Loader.dll $ERL_TOP/release/win32/erts-*/bin/
           ./otp_build installer_win32
+          ./erts/etc/win32/copyRedist.sh
 
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
           name: otp_win32_installer
           path: otp/release/win32/otp*.exe
+
+      - name: Init Bin
+        shell: cmd
+        run: |
+          cd otp\\release\\win32
+          .\\Install.exe -s
+
+      - name: Upload opt_win32
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: otp_win32
+          path: otp/release/
 
   build:
     name: Build Erlang/OTP
